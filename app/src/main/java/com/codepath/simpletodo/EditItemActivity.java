@@ -1,12 +1,11 @@
 package com.codepath.simpletodo;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 
 public class EditItemActivity extends AppCompatActivity {
     Button saveButton;
@@ -27,7 +26,7 @@ public class EditItemActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("ReturnValue", editText.getText().toString());
+                returnIntent.putExtra("Content", editText.getText().toString());
                 setResult(RESULT_OK, returnIntent);
                 finish();
             }

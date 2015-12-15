@@ -1,23 +1,21 @@
 package com.codepath.simpletodo;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    ArrayList<String> items;
-    ArrayAdapter<String> itemsAdapter;
+    public List<TodoItem> todoItems;
+    RecyclerView rvItems;
+    TodoItemAdapter adapter;
     ListView lvItems;
     private final int EditActivity = 0;
     private int editedPos = -1;
@@ -26,22 +24,37 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        rvItems = (RecyclerView) findViewById(R.id.rvTodoItems);
+        todoItems = TodoItem.createItemList(3);
+
+
+        rvItems.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        adapter = new TodoItemAdapter(todoItems);
+        rvItems.setAdapter(adapter);
+        //setupListViewListener();
+        //setupEditListener();
+
+        /*
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         lvItems = (ListView)findViewById(R.id.lvItems);
         readItems();
         itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
         lvItems.setAdapter(itemsAdapter);
         setupListViewListener();
-        setupEditListener();
+        setupEditListener();*/
 
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == EditActivity) {
-            String name = data.getExtras().getString("ReturnValue");
-            items.remove(editedPos);
-            items.add(editedPos, name);
-            itemsAdapter.notifyDataSetInvalidated();
+            String content = data.getExtras().getString("Content");
+            String location = data.getExtras().getString("Location");
+            TodoItem item = new TodoItem(content, location);
+            todoItems.remove(editedPos);
+            todoItems.add(editedPos, item);
+            //TodoItemAdapter.notifyDataSetInvalidated();
         }
     }
 
@@ -49,10 +62,10 @@ public class MainActivity extends AppCompatActivity {
         lvItems.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> adapter, View item, int pos, long id) {
-                        String content = items.get(pos);
+                    public void onItemClick(AdapterView<?> adapter, View view, int pos, long id) {
+                        TodoItem item = todoItems.get(pos);
                         editedPos = pos;
-                        startEditItemActivity(content);
+                        startEditItemActivity(item.content);
                     }
                 }
         );
@@ -70,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
                 new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> adapter, View item, int pos, long id) {
-                        items.remove(pos);
-                        itemsAdapter.notifyDataSetInvalidated();
+                        todoItems.remove(pos);
+                        //adapter.notifyDataSetInvalidated();
                         return true;
                     }
                 }
@@ -81,18 +94,18 @@ public class MainActivity extends AppCompatActivity {
     public void onAddItem(View v) {
         EditText etNewItem = (EditText)findViewById(R.id.etNewItem);
         String itemText = etNewItem.getText().toString();
-        itemsAdapter.add(itemText);
+        //adapter.add(itemText);
         etNewItem.setText("");
-        writeItems();
+        //writeItems();
     }
 
-    private void readItems() {
+    /*private void readItems() {
         File filesDir = getFilesDir();
         File todoFile = new File(filesDir, "todo.txt");
         try {
-            items = new ArrayList<String>(FileUtils.readLines(todoFile));
+            todoItems = new ArrayList<String>(FileUtils.readLines(todoFile));
         } catch (IOException e) {
-            items = new ArrayList<String>();
+            todoItems = new ArrayList<String>();
         }
 
     }
@@ -105,6 +118,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e){
             e.printStackTrace();
         }
-    }
+    }*/
 
 }
