@@ -6,9 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 
 import java.util.List;
 
@@ -16,7 +14,6 @@ public class MainActivity extends AppCompatActivity {
     public List<TodoItem> todoItems;
     RecyclerView rvItems;
     TodoItemAdapter adapter;
-    ListView lvItems;
     private final int EditActivity = 0;
     private int editedPos = -1;
 
@@ -25,25 +22,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         rvItems = (RecyclerView) findViewById(R.id.rvTodoItems);
-        todoItems = TodoItem.createItemList(3);
-
-
+        todoItems = TodoItem.createItemList(1);
         rvItems.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         adapter = new TodoItemAdapter(todoItems);
         rvItems.setAdapter(adapter);
         //setupListViewListener();
         //setupEditListener();
-
-        /*
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        lvItems = (ListView)findViewById(R.id.lvItems);
-        readItems();
-        itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
-        lvItems.setAdapter(itemsAdapter);
-        setupListViewListener();
-        setupEditListener();*/
-
     }
 
     @Override
@@ -59,16 +43,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupEditListener() {
-        lvItems.setOnItemClickListener(
-                new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapter, View view, int pos, long id) {
-                        TodoItem item = todoItems.get(pos);
-                        editedPos = pos;
-                        startEditItemActivity(item.content);
-                    }
-                }
-        );
+        rvItems.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TodoItem item = todoItems.get(1);
+                startEditItemActivity(item.content);
+
+            }
+        });
     }
 
     private void startEditItemActivity(String content) {
@@ -78,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void setupListViewListener() {
+    /*private void setupListViewListener() {
         lvItems.setOnItemLongClickListener(
                 new AdapterView.OnItemLongClickListener() {
                     @Override
@@ -89,12 +71,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
-    }
+    }*/
 
     public void onAddItem(View v) {
         EditText etNewItem = (EditText)findViewById(R.id.etNewItem);
         String itemText = etNewItem.getText().toString();
-        //adapter.add(itemText);
+        todoItems.add(new TodoItem(itemText, "(39.9, 116.4)"));
         etNewItem.setText("");
         //writeItems();
     }

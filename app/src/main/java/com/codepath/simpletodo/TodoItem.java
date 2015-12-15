@@ -18,7 +18,7 @@ public class TodoItem {
     public static List<TodoItem> createItemList(int count) {
         List<TodoItem> list = new ArrayList<>();
         for (int i = 0; i < count; ++i) {
-            list.add(new TodoItem("Item " + i, "Latitude, Longitude"));
+            list.add(new TodoItem("Current Location", "(37.78, -122.41)"));
         }
         return list;
     }
